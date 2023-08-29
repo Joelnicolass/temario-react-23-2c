@@ -12,8 +12,15 @@ import React from "react";
 
 */
 
-const Tarea1 = () => {
-  return <div>Tarea1</div>;
+const Tarea1 = ({ nombre, apellido, edad, expectativas }) => {
+  return (
+    <div>
+      <h1>{nombre}</h1>
+      <h1>{apellido}</h1>
+      <h1>{edad}</h1>
+      <h1>{expectativas}</h1>
+    </div>
+  );
 };
 
 export default Tarea1;

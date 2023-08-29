@@ -16,6 +16,10 @@ import React from "react";
 
 */
 
+// STATELESS - COMPONENTES SIN ESTADO
+
+// STATEFULL - COMPONENTES CON ESTADO
+
 const Componentes = () => {
   return <div>Componentes</div>;
 };
