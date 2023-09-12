@@ -27,3 +27,5 @@ const Props = ({ nombre, apellido }) => {
 };
 
 export default Props;
+
+<Props nombre={"Nico"} />;

@@ -1,22 +1,28 @@
 import React, { useState } from "react";
+import User from "./User";
 
 const EstadosInnecesarios = ({ users }) => {
-  const [index, setIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const handleNextUser = () => {
-    setIndex(index + 1 > users.length - 1 ? index : index + 1);
+    const newIndex = currentIndex + 1 > users.length - 1 ? 0 : currentIndex + 1;
+
+    setCurrentIndex(newIndex);
   };
 
   const handlePrevUser = () => {
-    setIndex(index - 1 < 0 ? index : index - 1);
+    const newIndex = currentIndex - 1 < 0 ? users.length - 1 : currentIndex - 1;
+
+    setCurrentIndex(newIndex);
   };
 
   return (
     <div>
-      <button onClick={handlePrevUser}>{"<-"}</button>
-      <p>{users[index].name}</p>
-      <p>{users[index].age}</p>
       <button onClick={handleNextUser}>{"->"}</button>
+
+      <User name={users[currentIndex].name} age={users[currentIndex].age} />
+
+      <button onClick={handlePrevUser}>{"<-"}</button>
     </div>
   );
 };
