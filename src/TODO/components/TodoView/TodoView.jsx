@@ -1,6 +1,8 @@
+import Form from "../Form/Form";
 import Task from "../Task/Task";
 
 import React, { useState } from "react";
+import Title from "../Title/Title";
 
 const TodoView = () => {
   // TAREAS
@@ -13,50 +15,22 @@ const TodoView = () => {
     completed: false,
   });
 
-  // FORMULARIO
-
-  const [form, setForm] = useState();
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({
-      ...form,
-      [name]: value,
-    });
-  };
-
-  const resetForm = () =>
-    setForm({
-      title: "",
-    });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const addTask = (form) => {
     const newTask = createTask(form.title);
-
     setTasks([...tasks, newTask]);
-
-    resetForm();
   };
 
   return (
     <div>
-      <section>
-        <h1>Lista de Tareas</h1>
-      </section>
+      <Title>
+        <h1>Lista de tareas</h1>
+      </Title>
 
-      <section>
-        <form onSubmit={handleSubmit}>
-          <input
-            name="title"
-            type="text"
-            value={form.title}
-            onChange={handleChange}
-          />
-          <button type="submit">Agregar tarea</button>
-        </form>
-      </section>
+      <Form
+        onSubmitted={(e) => {
+          addTask(e);
+        }}
+      />
 
       <section>
         {tasks.map((task) => {
