@@ -1,14 +1,15 @@
 import Form from "../Form/Form";
 import Task from "../Task/Task";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Title from "../Title/Title";
-import ListTasks from "../List/ListTasks";
 
 const TodoView = () => {
   // TAREAS
 
   const [tasks, setTasks] = useState([]);
+
+  const formRef = useRef(null);
 
   const createTask = (title) => ({
     id: window.crypto.randomUUID(),
@@ -16,16 +17,21 @@ const TodoView = () => {
     completed: false,
   });
 
-  const addTask = (form) => {
-    const newTask = createTask(form.title);
+  const addTask = (title) => {
+    const newTask = createTask(title);
     setTasks([...tasks, newTask]);
   };
 
-  const completeTask = (id) => {
-    const draft = structuredClone(tasks);
-    const task = draft.find((task) => task.id === id);
-    task.completed = !task.completed;
-    setTasks(draft);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const { title } = formRef.current.getForm();
+
+    if (!title) return;
+
+    addTask(title);
+
+    formRef.current.resetForm();
   };
 
   return (
@@ -34,25 +40,17 @@ const TodoView = () => {
         <h1>Lista de tareas</h1>
       </Title>
 
-      <Form
-        onSubmitted={(e) => {
-          addTask(e);
-        }}
-      />
+      <Form ref={formRef}>
+        <button onClick={handleSubmit}>Agregar tarea</button>
+      </Form>
 
-      <ListTasks
-        tasks={tasks}
-        renderTask={(task) => (
-          <Task
-            key={task.id}
-            title={task.title}
-            completed={task.completed}
-            onCompleted={() => {
-              completeTask(task.id);
-            }}
-          />
-        )}
-      />
+      <section>
+        {tasks.map((task) => {
+          return (
+            <Task key={task.id} title={task.title} completed={task.completed} />
+          );
+        })}
+      </section>
     </div>
   );
 };

@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, forwardRef, useImperativeHandle } from "react";
 
-const Form = ({ onSubmitted = (form) => {} }) => {
+const Form = forwardRef(({ children }, ref) => {
   const [form, setForm] = useState({
     title: "",
   });
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getForm: () => form,
+      resetForm: () => setForm({ title: "" }),
+    }),
+    [form]
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -13,31 +22,21 @@ const Form = ({ onSubmitted = (form) => {} }) => {
     });
   };
 
-  const resetForm = () =>
-    setForm({
-      title: "",
-    });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    resetForm();
-
-    onSubmitted(form);
-  };
-
   return (
     <section>
-      <form onSubmit={handleSubmit}>
+      <form>
         <input
           name="title"
           type="text"
           value={form.title}
           onChange={handleChange}
         />
-        <button type="submit">Agregar tarea</button>
+        {children}
       </form>
     </section>
   );
-};
+});
+
+Form.displayName = "Form";
 
 export default Form;
