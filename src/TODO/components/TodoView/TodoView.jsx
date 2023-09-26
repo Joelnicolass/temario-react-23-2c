@@ -3,6 +3,7 @@ import Task from "../Task/Task";
 
 import React, { useState } from "react";
 import Title from "../Title/Title";
+import ListTasks from "../List/ListTasks";
 
 const TodoView = () => {
   // TAREAS
@@ -20,6 +21,13 @@ const TodoView = () => {
     setTasks([...tasks, newTask]);
   };
 
+  const completeTask = (id) => {
+    const draft = structuredClone(tasks);
+    const task = draft.find((task) => task.id === id);
+    task.completed = !task.completed;
+    setTasks(draft);
+  };
+
   return (
     <div>
       <Title>
@@ -32,13 +40,19 @@ const TodoView = () => {
         }}
       />
 
-      <section>
-        {tasks.map((task) => {
-          return (
-            <Task key={task.id} title={task.title} completed={task.completed} />
-          );
-        })}
-      </section>
+      <ListTasks
+        tasks={tasks}
+        renderTask={(task) => (
+          <Task
+            key={task.id}
+            title={task.title}
+            completed={task.completed}
+            onCompleted={() => {
+              completeTask(task.id);
+            }}
+          />
+        )}
+      />
     </div>
   );
 };
