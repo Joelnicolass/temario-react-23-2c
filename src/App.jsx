@@ -1,11 +1,10 @@
 import React from "react";
-import TodoView from "./TODO/components/TodoView/TodoView";
-import RequestApis from "./temario/RequestApis";
+import CatViews from "./tarea/CatViews";
 
 const App = () => {
   return (
     <>
-      <RequestApis />
+      <CatViews />
     </>
   );
 };
