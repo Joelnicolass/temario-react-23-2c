@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const useFetch = (service) => {
   const [data, setData] = useState({
@@ -8,7 +8,7 @@ const useFetch = (service) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setError(null);
     setIsLoading(true);
     try {
@@ -20,11 +20,11 @@ const useFetch = (service) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [service]);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   return {
     data,
