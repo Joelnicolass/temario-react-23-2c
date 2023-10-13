@@ -4,9 +4,15 @@ import { useEffect, useState } from "react";
 // obtiene el valor de la propiedad name de cada objeto
 const getNames = (arr) => arr.map(({ name }) => name);
 
+// obtiene el valor de la propiedad initialState de cada objeto
+const getInitialState = (arr) => arr.map(({ initialState }) => initialState);
+
 // crea un objeto con las propiedades name y los valores values
-const mapValuesToNames = (values, names) =>
+const mapValuesToNames = (names, values) =>
   names.reduce((acc, name, i) => ({ ...acc, [name]: values[i] }), {});
+
+// obtiene el valor de la propiedad data de cada objeto
+const getDataValue = (arr) => arr.map(({ data }) => data);
 
 const useMultiFetch = (
   services = [
@@ -19,7 +25,7 @@ const useMultiFetch = (
   ]
 ) => {
   const [state, setState] = useState(
-    services.reduce((a, e) => ({ ...a, [e.name]: e.initialState }), {})
+    mapValuesToNames(getNames(services), getInitialState(services))
   );
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -29,24 +35,21 @@ const useMultiFetch = (
   const axiosResolver = async ({ request, adapter }) =>
     getAdapter(adapter)((await request()).data);
 
-  const toState = (values, objects) =>
-    mapValuesToNames(values, getNames(objects));
+  const getData = async () => {
+    setError(null);
+    setIsLoading(true);
+    try {
+      const promises = await Promise.all(services.map(axiosResolver));
+      setState(mapValuesToNames(getNames(services), promises));
+    } catch (error) {
+      console.log(error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const getData = async () => {
-      setError(null);
-      setIsLoading(true);
-      try {
-        const promises = await Promise.all(services.map(axiosResolver));
-        setState(toState(promises, services));
-      } catch (error) {
-        console.log(error);
-        setError(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     getData();
   }, []);
 
@@ -54,6 +57,7 @@ const useMultiFetch = (
     data: state,
     isLoading,
     error,
+    getData,
   };
 };
 
